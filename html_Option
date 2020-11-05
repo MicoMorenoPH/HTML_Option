@@ -1,0 +1,33 @@
+//LOAD
+
+function loadDropdown(itemcode) {
+    dtl = []; vdtl = {};
+
+    vdtl["itemcode"] = itemcode;
+    dtl.push(vdtl);
+
+    ApiAjax("API", dtl, function (data) {
+        if (data.length > 0) {
+            $('#cboUom').empty();
+            tmpTable = "";
+            $.each(data, function (i, val) {
+                if (data.length > 1) {
+                    if (i == 0) { $('#cboConv').val(val.conv); }
+                    tmpTable += '<option value='+ val.uom +' nValue ='+ val.conv +'>' + val.uom +'</option>';
+                } else {
+                    tmpTable += '<option value=' + val.uom + ' nValue =' + val.conv + '>' + val.uom + '</option>';
+                    $('#cboConv').val(val.conv);
+                }
+                i++;
+            });
+            $('#cboUom').append(tmpTable);
+        }
+    });
+}
+
+//keydown
+$('#cboUom').on("change", function () {
+    $('#cboConv').val();
+    $('#cboConv').val($('option:selected', this).attr('nValue'));
+    $('#txtQty').focus();
+});
